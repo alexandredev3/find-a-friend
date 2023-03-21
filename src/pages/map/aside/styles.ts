@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Form } from 'react-router-dom'
 
 export const Container = styled.aside`
   width: 392px;
@@ -84,3 +85,5 @@ export const ContentFilters = styled.div`
   flex-direction: column;
   gap: 30px;
 `
+
+export const AsideForm = styled(Form)``

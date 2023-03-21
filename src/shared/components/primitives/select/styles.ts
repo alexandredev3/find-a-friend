@@ -13,30 +13,48 @@ export const FilterLabel = styled.label`
 `
 
 export const FilterWrapper = styled.div`
+  width: 100%;
+  height: 60px;
+  background-color: #f75f64;
+  border-radius: 15px;
+  padding: 12px;
+
   position: relative;
 
-  & > img {
+  display: flex;
+  align-items: center;
+
+  & > svg {
     position: absolute;
     right: 18px;
     top: 50%;
+
     transform: translateY(-50%);
   }
 `
 
 export const FilterInput = styled.select`
+  position: absolute;
+  left: 0;
+  padding: 12px;
+
+  margin-right: 12px;
+
+  z-index: 1;
+
   width: 100%;
   height: 60px;
+
   font-size: 16px;
-  line-height: 19.2px;
   font-weight: 800;
-  color: #ffffff;
-  background-color: #f75f64;
-  border-radius: 15px;
-  border: none;
-  outline: none;
-  padding: 20px;
+  line-height: 19.2px;
+
   appearance: none;
-  position: relative;
+
+  border: none !important;
+  background-color: transparent;
+  outline: none;
+  color: #ffffff;
 
   &::before {
     content: '⌄';
@@ -44,6 +62,10 @@ export const FilterInput = styled.select`
     height: 6px;
     display: absolute;
     color: #ffffff;
+  }
+
+  & > option {
+    background-color: #f75f64;
   }
 `
 

@@ -1,11 +1,12 @@
-import logo from '@/assets/icons/logo.svg'
+import type { PetType } from '~/shared/typings/pets'
+import logo from '~/assets/icons/logo.svg'
 
 import { Container, Name, PetImage, TypeIcon } from './styles'
 
 type CardProps = {
   path: string
   name: string
-  type: 'dog' | 'cat'
+  type: PetType
 }
 
 export function Card({ path, name, type }: CardProps) {
