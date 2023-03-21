@@ -1,9 +1,5 @@
 <p align="center">
-  <a href="https://tails-ui-playground.vercel.app" target="_blank">
-    <picture>
-      <img alt="Tails UI" src="https://raw.githubusercontent.com/alexandredev3/find-a-friend/HEAD/.github/logo.svg" width="350" height="70" style="max-width: 100%;">
-    </picture>
-  </a>
+  <img alt="Tails UI" src="https://raw.githubusercontent.com/alexandredev3/find-a-friend/HEAD/.github/logo.svg" width="350" height="70" style="max-width: 100%;">
 </p>
 
 <p align="center">
