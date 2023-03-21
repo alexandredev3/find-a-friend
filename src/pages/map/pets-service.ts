@@ -1,4 +1,4 @@
-import { BaseAPI } from '../lib/BaseAPI'
+import { BaseAPI } from 'shared/lib/BaseAPI'
 
 import type {
   PetAge,
@@ -6,7 +6,7 @@ import type {
   PetIndependence,
   PetSize,
   PetType,
-} from '../typings/pets'
+} from 'shared/typings/pets'
 
 type GetPetsQuery = {
   city: string
