@@ -16,6 +16,11 @@ export const Container = styled.button`
   :hover {
     filter: brightness(0.9);
   }
+
+  &:disabled {
+    filter: brightness(0.85);
+    cursor: not-allowed;
+  }
 `
 
 export const ButtonIconSlot = styled(Slot)`

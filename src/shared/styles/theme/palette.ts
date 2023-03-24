@@ -10,6 +10,7 @@ export const palette = {
     0: '#FFFFFF',
   },
   red: {
+    300: '#f15156',
     400: '#E44449',
   },
   error: {

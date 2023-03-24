@@ -1,5 +1,5 @@
-import { Suspense, useEffect, useState } from 'react'
-import { defer, useLoaderData, Await, redirect } from 'react-router-dom'
+import { Suspense } from 'react'
+import { defer, Await, redirect, useRouteLoaderData } from 'react-router-dom'
 import type { LoaderFunction, ActionFunction } from 'react-router-dom'
 
 import {
@@ -15,9 +15,12 @@ import {
 
 import { Logo } from '~/assets/icons/logo'
 import { Search } from '~/assets/icons/search'
+
 import { Select, Button } from 'shared/components/primitives'
+import { routesIds } from 'shared/routes/routes-ids'
 import { Status } from 'shared/constants/status'
-import { LocationService } from './location-service'
+import { LocationService } from 'shared/services/location-service'
+import { useCityLocation } from 'shared/hooks/useCityLocation'
 
 type LocationStatesResponse = {
   data: {
@@ -27,11 +30,6 @@ type LocationStatesResponse = {
       nome: string
     }[]
   }
-}
-
-type LocationCity = {
-  code: string
-  name: string
 }
 
 const locationService = new LocationService()
@@ -56,40 +54,15 @@ export const homeAction: ActionFunction = async ({ request }) => {
 }
 
 export function Home() {
-  const data = useLoaderData<{
+  const data = useRouteLoaderData<{
     locationStatesResponse: Promise<any>
-    locationCitiesResponse: Promise<any>
-  }>()
-  const [cities, setCities] = useState<LocationCity[]>([])
-  const [currentSelectedLocationState, setCurrentSelectedLocationState] =
-    useState('')
-  const [citiesDataStatus, setCititesDataStatus] = useState<Status>(Status.IDLE)
-
-  async function handleChangeState(state: string) {
-    setCurrentSelectedLocationState(state)
-  }
-
-  useEffect(() => {
-    const getCities = async () => {
-      try {
-        if (!currentSelectedLocationState) return
-        setCititesDataStatus(Status.LOADING)
-        const response = await locationService.getCities(
-          currentSelectedLocationState,
-        )
-        const cities = response.data.citys
-
-        setCities(cities)
-        setCititesDataStatus(Status.SUCCESS)
-      } catch (error) {
-        setCititesDataStatus(Status.ERROR)
-
-        throw error
-      }
-    }
-
-    getCities()
-  }, [currentSelectedLocationState])
+  }>(routesIds.root)
+  const {
+    changeLocationState,
+    currentSelectedLocationState,
+    cities,
+    citiesDataStatus,
+  } = useCityLocation()
 
   return (
     <Container>
@@ -119,11 +92,12 @@ export function Home() {
                 <Select.Viewport className="SelectViewport">
                   <Select.Input
                     name="state"
-                    onChange={(e) => handleChangeState(e.currentTarget.value)}
+                    onChange={(e) => changeLocationState(e.currentTarget.value)}
+                    required
                   >
-                    <Select.Option disabled selected>
+                    {/* <Select.Option disabled selected>
                       UF
-                    </Select.Option>
+                    </Select.Option> */}
                     <Suspense
                       fallback={
                         <Select.Option disabled>Carregando...</Select.Option>
@@ -159,6 +133,7 @@ export function Home() {
                       !currentSelectedLocationState ||
                       citiesDataStatus === Status.LOADING
                     }
+                    required
                   >
                     <Select.Option disabled selected>
                       Cidade

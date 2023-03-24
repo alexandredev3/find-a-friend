@@ -1,5 +1,11 @@
+import { Suspense, useState } from 'react'
+import { Await, useRouteLoaderData } from 'react-router-dom'
+
 import { Button, Select } from 'shared/components/primitives'
 import { getPageQueryParams } from 'shared/utils/getPageQueryParams'
+import { routesIds } from 'shared/routes/routes-ids'
+import { useCityLocation } from 'shared/hooks/useCityLocation'
+import { Status } from 'shared/constants/status'
 
 import logo from '~/assets/icons/logo.svg'
 import { Search } from '~/assets/icons/search'
@@ -14,8 +20,14 @@ import {
   AsideForm,
 } from './styles'
 
-type MapQueryParams = {
-  city: string
+type LocationStatesResponse = {
+  data: {
+    states: {
+      id: number
+      sigla: string
+      nome: string
+    }[]
+  }
 }
 
 const ageOptions = [
@@ -84,8 +96,20 @@ const independencyOptions = [
 ]
 
 export function Aside() {
-  const queryParams = getPageQueryParams<MapQueryParams>()
+  const queryParams = getPageQueryParams()
   const city = queryParams.get('city')
+  const state = queryParams.get('state')
+
+  const data = useRouteLoaderData<{
+    locationStatesResponse: Promise<any>
+  }>(routesIds.root)
+  const {
+    changeLocationState,
+    currentSelectedLocationState,
+    cities,
+    citiesDataStatus,
+  } = useCityLocation(state ?? '')
+  const [currentCitySelected, setCurrentCitySelected] = useState(city ?? '')
 
   return (
     <Container>
@@ -94,12 +118,71 @@ export function Aside() {
           <div>
             <img src={logo} alt="" />
             <HeaderInput>
-              <input
-                name="city"
-                type="text"
-                placeholder="Insira uma cidade"
-                value={city ?? ''}
-              />
+              <Select className="StateSelect">
+                <Select.Viewport className="StateSelectViewport">
+                  <Select.Input
+                    name="state"
+                    onChange={(e) => changeLocationState(e.currentTarget.value)}
+                    value={currentSelectedLocationState}
+                  >
+                    <Select.Option disabled selected>
+                      UF
+                    </Select.Option>
+                    <Suspense
+                      fallback={
+                        <Select.Option disabled>Carregando...</Select.Option>
+                      }
+                    >
+                      <Await resolve={data.locationStatesResponse}>
+                        {(
+                          resolvedLocationStatesResponse: LocationStatesResponse,
+                        ) =>
+                          resolvedLocationStatesResponse.data.states?.map(
+                            (state) => (
+                              <Select.Option key={state.id}>
+                                {state.sigla}
+                              </Select.Option>
+                            ),
+                          )
+                        }
+                      </Await>
+                    </Suspense>
+                  </Select.Input>
+                  <Select.Icon />
+                </Select.Viewport>
+              </Select>
+
+              <Select className="CitySelect">
+                <Select.Viewport className="CitySelectViewport">
+                  <Select.Input
+                    name="city"
+                    className="SelectInput"
+                    disabled={
+                      !currentSelectedLocationState ||
+                      citiesDataStatus === Status.LOADING
+                    }
+                    value={currentCitySelected}
+                    onChange={(e) =>
+                      setCurrentCitySelected(e.currentTarget.value)
+                    }
+                  >
+                    <Select.Option disabled selected>
+                      Cidade
+                    </Select.Option>
+                    {citiesDataStatus === Status.LOADING ? (
+                      <Select.Option>Carregando...</Select.Option>
+                    ) : null}
+                    {citiesDataStatus === Status.SUCCESS
+                      ? cities.map((city) => (
+                          <Select.Option key={city.code}>
+                            {city.name}
+                          </Select.Option>
+                        ))
+                      : null}
+                  </Select.Input>
+                  <Select.Icon />
+                </Select.Viewport>
+              </Select>
               <Button className="SearchButton" type="submit">
                 <Button.Icon>
                   <Search />

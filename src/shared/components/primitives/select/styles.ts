@@ -56,6 +56,9 @@ export const FilterInput = styled.select`
   outline: none;
   color: #ffffff;
 
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   &::before {
     content: '⌄';
     width: 12px;

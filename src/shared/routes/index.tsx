@@ -3,17 +3,24 @@ import { createBrowserRouter } from 'react-router-dom'
 import { Home, homeAction, homeLoader } from '~/pages/home'
 import { Map, mapAction, mapLoader } from '~/pages/map'
 
+import { routesIds } from './routes-ids'
+
 export const router = createBrowserRouter([
   {
-    path: '/',
-    element: <Home />,
+    id: routesIds.root,
     loader: homeLoader,
-    action: homeAction,
-  },
-  {
-    path: '/map',
-    element: <Map />,
-    loader: mapLoader,
-    action: mapAction,
+    children: [
+      {
+        path: '/',
+        element: <Home />,
+        action: homeAction,
+      },
+      {
+        path: '/map',
+        element: <Map />,
+        loader: mapLoader,
+        action: mapAction,
+      },
+    ],
   },
 ])

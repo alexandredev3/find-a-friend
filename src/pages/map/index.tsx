@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import {
   Await,
   defer,
@@ -20,6 +21,7 @@ import type {
   PetType,
 } from 'shared/typings/pets'
 import { getPageQueryParams } from 'shared/utils/getPageQueryParams'
+import { removeDiacritics } from 'shared/utils/removeDiacritics'
 
 import chevron from '~/assets/icons/chevron-bottom-blue.svg'
 
@@ -31,7 +33,6 @@ import {
   HeaderSelect,
   Display,
 } from './styles'
-import { Suspense } from 'react'
 
 type PetsResponse = {
   data: {
@@ -91,8 +92,10 @@ export const mapLoader: LoaderFunction = ({ request }) => {
 
   invariant(city, 'city was not provider')
 
+  const cityNormalized = removeDiacritics(city)
+
   const response = petsService.getPets({
-    city,
+    city: cityNormalized,
     age: petAge,
     energy: petEnergy,
     size: petSize,
@@ -121,9 +124,21 @@ export function Map() {
 
       <Content>
         <Header>
-          <p>
-            Encontre <span>324 amigos</span> na sua cidade
-          </p>
+          <Suspense fallback={<h1>Carregando...</h1>}>
+            <Await resolve={data.petsResponse}>
+              {(petsResponse: PetsResponse) => {
+                const petsAmount = petsResponse.data.pets.length
+
+                return petsAmount > 0 ? (
+                  <p>
+                    Encontre <span>{petsAmount} amigos</span> na sua cidade
+                  </p>
+                ) : (
+                  <p>Nenhum amigo foi encontrado na sua cidade :(</p>
+                )
+              }}
+            </Await>
+          </Suspense>
           <SelectWrapper>
             <HeaderSelect
               onChange={(e) => handleFilterByPetType(e.currentTarget.value)}
