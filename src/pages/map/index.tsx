@@ -9,10 +9,21 @@ import {
 import type { ActionFunction, LoaderFunction } from 'react-router-dom'
 import invariant from 'tiny-invariant'
 
+import {
+  Container,
+  Content,
+  SelectWrapper,
+  Header,
+  HeaderSelect,
+  Display,
+} from './styles'
+
 import { Aside } from './aside'
-import { Card } from 'shared/components/card'
 import { PetsService } from './pets-service'
 
+import chevron from '~/assets/icons/chevron-bottom-blue.svg'
+
+import { Card } from 'shared/components/card'
 import type {
   PetAge,
   PetEnergy,
@@ -22,17 +33,6 @@ import type {
 } from 'shared/typings/pets'
 import { getPageQueryParams } from 'shared/utils/getPageQueryParams'
 import { removeDiacritics } from 'shared/utils/removeDiacritics'
-
-import chevron from '~/assets/icons/chevron-bottom-blue.svg'
-
-import {
-  Container,
-  Content,
-  SelectWrapper,
-  Header,
-  HeaderSelect,
-  Display,
-} from './styles'
 
 type PetsResponse = {
   data: {
@@ -47,13 +47,15 @@ type PetsResponse = {
 
 export const mapAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
+  const queryParams = getPageQueryParams()
 
   const city = formData.get('city')?.toString()
   const petAge = formData.get('age')?.toString()
   const petEnergy = formData.get('energy')?.toString()
   const petSize = formData.get('size')?.toString()
-  const petType = formData.get('type')?.toString() ?? 'all'
   const petIndependency = formData.get('independency')?.toString()
+
+  const petType = queryParams.get('type') ?? 'all'
 
   invariant(city, 'city was not provider')
   invariant(petAge, 'pet age was not provider')
@@ -62,22 +64,19 @@ export const mapAction: ActionFunction = async ({ request }) => {
   invariant(petIndependency, 'pet independecy was not provider')
   invariant(petType, 'pet type was not provider')
 
-  const redirectQueryParams = new URLSearchParams({
-    city,
-    age: petAge,
-    energy: petEnergy,
-    size: petSize,
-    independence: petIndependency,
-    type: petType,
-  })
+  queryParams.set('city', city)
+  queryParams.set('age', petAge)
+  queryParams.set('energy', petEnergy)
+  queryParams.set('size', petSize)
+  queryParams.set('independence', petIndependency)
+  queryParams.set('type', petType)
 
-  return redirect(`/map?${redirectQueryParams}`)
+  return redirect(`/map?${queryParams.toString()}`)
 }
 
-export const mapLoader: LoaderFunction = ({ request }) => {
+export const mapLoader: LoaderFunction = () => {
   const petsService = new PetsService()
-  const url = new URL(request.url)
-  const queryParams = new URLSearchParams(url.search)
+  const queryParams = getPageQueryParams()
 
   const city = queryParams.get('city') as string | undefined
   const petAge = queryParams.get('age') as PetAge | undefined

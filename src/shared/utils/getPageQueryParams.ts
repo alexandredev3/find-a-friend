@@ -1,6 +1,8 @@
-export const getPageQueryParams = () => {
-  const queryParams = window.location.search
-  const urlQueryParams = new URLSearchParams(queryParams)
+export const getPageQueryParams = (
+  url: string = window.location.toString(),
+) => {
+  const _url = new URL(url)
+  const urlQueryParams = new URLSearchParams(_url.search)
 
   return urlQueryParams
 }
