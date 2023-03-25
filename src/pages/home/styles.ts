@@ -8,7 +8,7 @@ export const Container = styled.div`
 
   width: 100vw;
   height: 100vh;
-  background-color: ${({ theme }) => theme.background.secondary};
+  background-color: ${({ theme }) => theme.background.primary};
 `
 
 export const Content = styled.div`
@@ -70,7 +70,7 @@ export const SelectWrapper = styled.div`
 export const StateSelectWrapper = styled.div`
   .SelectViewport {
     width: 72px;
-    background-color: ${({ theme }) => theme.background.secondary};
+    background-color: ${({ theme }) => theme.background.primary};
     border: ${({ theme }) => `1px solid ${theme.text.primary}`};
   }
 

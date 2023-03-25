@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 
+type FilterWrapperProps = {
+  error?: string
+}
+
 export const Filter = styled.div`
   display: flex;
   flex-direction: column;
@@ -12,7 +16,7 @@ export const FilterLabel = styled.label`
   font-weight: 500;
 `
 
-export const FilterWrapper = styled.div`
+export const FilterWrapper = styled.div<FilterWrapperProps>`
   width: 100%;
   height: 60px;
   background-color: #f75f64;
@@ -24,10 +28,21 @@ export const FilterWrapper = styled.div`
   display: flex;
   align-items: center;
 
+  border: ${({ theme, error }) =>
+    error ? `1px solid ${theme.background.secondary} !important` : 'none'};
+
+  select {
+    color: ${({ theme, error }) =>
+      error ? `${theme.background.secondary}` : '#ffffff'};
+  }
+
   & > svg {
     position: absolute;
     right: 18px;
     top: 50%;
+
+    fill: ${({ theme, error }) =>
+      error ? `${theme.background.secondary}` : '#ffffff'};
 
     transform: translateY(-50%);
   }

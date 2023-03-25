@@ -17,6 +17,7 @@ import {
 
 import { useTheme } from 'shared/hooks/useTheme'
 
+// TODO: remove error when the user focus the input and its value is valid
 function SelectRoot({
   children,
   ...rest
@@ -33,9 +34,14 @@ function SelectLabel({
 
 function SelectViewport({
   children,
+  error,
   ...rest
-}: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) {
-  return <FilterWrapper {...rest}>{children}</FilterWrapper>
+}: PropsWithChildren<{ error?: string } & HTMLAttributes<HTMLDivElement>>) {
+  return (
+    <FilterWrapper {...rest} error={error}>
+      {children}
+    </FilterWrapper>
+  )
 }
 
 function SelectInput({
@@ -52,6 +58,16 @@ function SelectOption({
   return <FilterInputOption {...rest}>{children}</FilterInputOption>
 }
 
+function SelectError({
+  error,
+}: { error: string | undefined } & HTMLAttributes<HTMLSpanElement>) {
+  console.log({
+    error,
+  })
+
+  return error ? <span>{error}</span> : null
+}
+
 function SelectIcon() {
   const { palette } = useTheme()
 
@@ -64,4 +80,5 @@ export const Select = Object.assign(SelectRoot, {
   Input: SelectInput,
   Option: SelectOption,
   Icon: SelectIcon,
+  Error: SelectError,
 })

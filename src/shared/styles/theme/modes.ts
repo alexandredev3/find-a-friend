@@ -5,16 +5,16 @@ export const modes = {
     text: { primary: palette.gray['0'] },
     red: palette.red,
     background: {
-      primary: palette.error['50'],
-      secondary: palette.primary.main,
+      primary: palette.primary.main,
+      secondary: palette.secondary.main,
     },
   },
   dark: {
     text: { primary: palette.gray['0'] },
     red: palette.red,
     background: {
-      primary: palette.error['50'],
-      secondary: palette.primary.main,
+      primary: palette.primary.main,
+      secondary: palette.secondary.main,
     },
   },
 }

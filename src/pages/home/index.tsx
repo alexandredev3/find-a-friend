@@ -1,5 +1,11 @@
 import { Suspense } from 'react'
-import { defer, Await, redirect, useRouteLoaderData } from 'react-router-dom'
+import {
+  defer,
+  Await,
+  redirect,
+  useRouteLoaderData,
+  useActionData,
+} from 'react-router-dom'
 import type { LoaderFunction, ActionFunction } from 'react-router-dom'
 
 import {
@@ -16,11 +22,15 @@ import {
 import { Logo } from '~/assets/icons/logo'
 import { Search } from '~/assets/icons/search'
 
+import { locationValidator } from './location-validator'
+import type { LocationFields } from './location-validator'
+
 import { Select, Button } from 'shared/components/primitives'
 import { routesIds } from 'shared/routes/routes-ids'
 import { Status } from 'shared/constants/status'
 import { LocationService } from 'shared/services/location-service'
 import { useCityLocation } from 'shared/hooks/useCityLocation'
+import { ValidationResult } from 'shared/typings/validation'
 
 type LocationStatesResponse = {
   data: {
@@ -43,20 +53,27 @@ export const homeLoader: LoaderFunction = async () => {
 }
 
 export const homeAction: ActionFunction = async ({ request }) => {
-  const formData = await request.formData()
+  const fieldValues = await locationValidator.validate(await request.formData())
+
+  if (fieldValues.error) {
+    return fieldValues
+  }
+
+  const { state, city } = fieldValues.data
 
   const queryParams = new URLSearchParams({
-    state: formData.get('state')?.toString()!,
-    city: formData.get('city')?.toString()!,
+    state,
+    city,
   })
 
   return redirect('/map?' + queryParams)
 }
 
 export function Home() {
-  const data = useRouteLoaderData<{
+  const loaderData = useRouteLoaderData<{
     locationStatesResponse: Promise<any>
   }>(routesIds.root)
+  const actionData = useActionData<ValidationResult<LocationFields>>()
   const {
     changeLocationState,
     currentSelectedLocationState,
@@ -89,21 +106,24 @@ export function Home() {
                   Busque um amigo:
                 </Select.Label>
 
-                <Select.Viewport className="SelectViewport">
+                <Select.Viewport
+                  className="SelectViewport"
+                  error={actionData?.error?.fieldErrors.state}
+                >
                   <Select.Input
                     name="state"
                     onChange={(e) => changeLocationState(e.currentTarget.value)}
                     required
                   >
-                    {/* <Select.Option disabled selected>
+                    <Select.Option disabled selected>
                       UF
-                    </Select.Option> */}
+                    </Select.Option>
                     <Suspense
                       fallback={
                         <Select.Option disabled>Carregando...</Select.Option>
                       }
                     >
-                      <Await resolve={data.locationStatesResponse}>
+                      <Await resolve={loaderData.locationStatesResponse}>
                         {(
                           resolvedLocationStatesResponse: LocationStatesResponse,
                         ) =>
@@ -125,7 +145,10 @@ export function Home() {
 
             <CitySelectWrapper>
               <Select className="Select">
-                <Select.Viewport className="SelectViewport">
+                <Select.Viewport
+                  className="SelectViewport"
+                  error={actionData?.error?.fieldErrors.city}
+                >
                   <Select.Input
                     name="city"
                     className="SelectInput"
@@ -133,7 +156,6 @@ export function Home() {
                       !currentSelectedLocationState ||
                       citiesDataStatus === Status.LOADING
                     }
-                    required
                   >
                     <Select.Option disabled selected>
                       Cidade

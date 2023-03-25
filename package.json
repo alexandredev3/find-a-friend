@@ -11,14 +11,15 @@
   "dependencies": {
     "@phosphor-icons/react": "^2.0.5",
     "@radix-ui/react-slot": "^1.0.1",
+    "@remix-validated-form/with-zod": "^2.0.5",
     "axios": "^1.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.9.0",
-    "remix-validated-form": "^4.6.10",
     "styled-components": "^5.3.8",
     "tiny-invariant": "^1.3.1",
-    "vite-tsconfig-paths": "^4.0.5"
+    "vite-tsconfig-paths": "^4.0.5",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^1.2.0",
