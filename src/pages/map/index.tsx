@@ -57,12 +57,12 @@ export const mapAction: ActionFunction = async ({ request }) => {
 
   const petType = queryParams.get('type') ?? 'all'
 
-  invariant(city, 'city was not provider')
-  invariant(petAge, 'pet age was not provider')
-  invariant(petEnergy, 'pet energy was not provider')
-  invariant(petSize, 'pet size was not provider')
-  invariant(petIndependency, 'pet independecy was not provider')
-  invariant(petType, 'pet type was not provider')
+  invariant(city, 'city was not provided')
+  invariant(petAge, 'pet age was not provided')
+  invariant(petEnergy, 'pet energy was not provided')
+  invariant(petSize, 'pet size was not provided')
+  invariant(petIndependency, 'pet independecy was not provided')
+  invariant(petType, 'pet type was not provided')
 
   queryParams.set('city', city)
   queryParams.set('age', petAge)
@@ -89,12 +89,12 @@ export const mapLoader: LoaderFunction = () => {
     | PetIndependence
     | undefined
 
-  invariant(city, 'city was not provider')
+  invariant(city, 'city was not provided')
 
-  const cityNormalized = removeDiacritics(city)
+  const cityFormatted = removeDiacritics(city)
 
   const response = petsService.getPets({
-    city: cityNormalized,
+    city: cityFormatted,
     age: petAge,
     energy: petEnergy,
     size: petSize,
