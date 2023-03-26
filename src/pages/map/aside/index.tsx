@@ -1,15 +1,6 @@
 import { Suspense, useState } from 'react'
 import { Await, useRouteLoaderData } from 'react-router-dom'
 
-import { Button, Select } from 'shared/components/primitives'
-import { getPageQueryParams } from 'shared/utils/getPageQueryParams'
-import { routesIds } from 'shared/routes/routes-ids'
-import { useCityLocation } from 'shared/hooks/useCityLocation'
-import { Status } from 'shared/constants/status'
-
-import logo from '~/assets/icons/logo.svg'
-import { Search } from '~/assets/icons/search'
-
 import {
   Container,
   AsideHeader,
@@ -19,6 +10,15 @@ import {
   ContentFilters,
   AsideForm,
 } from './styles'
+
+import logo from '~/assets/icons/logo.svg'
+import { Search } from '~/assets/icons/search'
+
+import { Button, Select } from 'shared/components/primitives'
+import { getPageQueryParams } from 'shared/utils/get-page-query-params'
+import { routesIds } from 'shared/routes/routes-ids'
+import { useCityLocation } from 'shared/hooks/useCityLocation'
+import { Status } from 'shared/constants/status'
 
 type LocationStatesResponse = {
   data: {

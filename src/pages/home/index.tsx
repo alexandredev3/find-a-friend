@@ -22,15 +22,13 @@ import {
 import { Logo } from '~/assets/icons/logo'
 import { Search } from '~/assets/icons/search'
 
-import { locationValidator } from './location-validator'
-import type { LocationFields } from './location-validator'
-
 import { Select, Button } from 'shared/components/primitives'
 import { routesIds } from 'shared/routes/routes-ids'
 import { Status } from 'shared/constants/status'
 import { LocationService } from 'shared/services/location-service'
 import { useCityLocation } from 'shared/hooks/useCityLocation'
 import { ValidationResult } from 'shared/typings/validation'
+import { locationValidator, type LocationFields } from './location-validator'
 
 type LocationStatesResponse = {
   data: {

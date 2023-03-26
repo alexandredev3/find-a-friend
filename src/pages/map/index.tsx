@@ -20,6 +20,7 @@ import {
 
 import { Aside } from './aside'
 import { PetsService } from './pets-service'
+import { petValidator } from './pet-validator'
 
 import chevron from '~/assets/icons/chevron-bottom-blue.svg'
 
@@ -31,8 +32,8 @@ import type {
   PetSize,
   PetType,
 } from 'shared/typings/pets'
-import { getPageQueryParams } from 'shared/utils/getPageQueryParams'
-import { removeDiacritics } from 'shared/utils/removeDiacritics'
+import { getPageQueryParams } from 'shared/utils/get-page-query-params'
+import { removeDiacritics } from 'shared/utils/remove-diacritics'
 
 type PetsResponse = {
   data: {
@@ -46,37 +47,33 @@ type PetsResponse = {
 }
 
 export const mapAction: ActionFunction = async ({ request }) => {
-  const formData = await request.formData()
+  const fieldValues = await petValidator.validate(await request.formData())
   const queryParams = getPageQueryParams()
 
-  const city = formData.get('city')?.toString()
-  const petAge = formData.get('age')?.toString()
-  const petEnergy = formData.get('energy')?.toString()
-  const petSize = formData.get('size')?.toString()
-  const petIndependency = formData.get('independency')?.toString()
+  if (fieldValues.error) {
+    return fieldValues
+  }
 
+  const { city, age, size, energy, independency } = fieldValues.data
   const petType = queryParams.get('type') ?? 'all'
 
-  invariant(city, 'city was not provided')
-  invariant(petAge, 'pet age was not provided')
-  invariant(petEnergy, 'pet energy was not provided')
-  invariant(petSize, 'pet size was not provided')
-  invariant(petIndependency, 'pet independecy was not provided')
-  invariant(petType, 'pet type was not provided')
+  console.log({
+    field: fieldValues.data,
+  })
 
   queryParams.set('city', city)
-  queryParams.set('age', petAge)
-  queryParams.set('energy', petEnergy)
-  queryParams.set('size', petSize)
-  queryParams.set('independence', petIndependency)
+  queryParams.set('age', age)
+  queryParams.set('energy', energy)
+  queryParams.set('size', size)
+  queryParams.set('independency', independency)
   queryParams.set('type', petType)
 
   return redirect(`/map?${queryParams.toString()}`)
 }
 
-export const mapLoader: LoaderFunction = () => {
+export const mapLoader: LoaderFunction = ({ request }) => {
   const petsService = new PetsService()
-  const queryParams = getPageQueryParams()
+  const queryParams = getPageQueryParams(request.url)
 
   const city = queryParams.get('city') as string | undefined
   const petAge = queryParams.get('age') as PetAge | undefined
@@ -107,7 +104,7 @@ export const mapLoader: LoaderFunction = () => {
 
 export function Map() {
   const navigate = useNavigate()
-  const data = useLoaderData<{ petsResponse: PetsResponse }>()
+  const loaderData = useLoaderData<{ petsResponse: PetsResponse }>()
 
   function handleFilterByPetType(type: string) {
     const newQueryParams = getPageQueryParams()
@@ -124,7 +121,7 @@ export function Map() {
       <Content>
         <Header>
           <Suspense fallback={<h1>Carregando...</h1>}>
-            <Await resolve={data.petsResponse}>
+            <Await resolve={loaderData.petsResponse}>
               {(petsResponse: PetsResponse) => {
                 const petsAmount = petsResponse.data.pets.length
 
@@ -153,7 +150,7 @@ export function Map() {
         </Header>
         <Display>
           <Suspense fallback={<h1>Carregando...</h1>}>
-            <Await resolve={data.petsResponse}>
+            <Await resolve={loaderData.petsResponse}>
               {(petsResponse: PetsResponse) =>
                 petsResponse.data.pets.map((pet) => (
                   <Card
