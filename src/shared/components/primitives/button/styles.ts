@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { Slot } from '@radix-ui/react-slot'
 
 export const Container = styled.button`
   width: 60px;
@@ -21,8 +20,8 @@ export const Container = styled.button`
     filter: brightness(0.85);
     cursor: not-allowed;
   }
-`
 
-export const ButtonIconSlot = styled(Slot)`
-  width: 22px;
+  svg {
+    margin: 0 14px;
+  }
 `

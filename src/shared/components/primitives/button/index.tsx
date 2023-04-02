@@ -1,7 +1,8 @@
-import type { ButtonHTMLAttributes, PropsWithChildren } from 'react'
+import { ButtonHTMLAttributes, PropsWithChildren } from 'react'
 import type { SlotProps } from '@radix-ui/react-slot'
+import { Slot } from '@radix-ui/react-slot'
 
-import { Container, ButtonIconSlot } from './styles'
+import { Container } from './styles'
 
 export function ButtonRoot({
   children,
@@ -15,9 +16,9 @@ export function ButtonIcon({
   ...rest
 }: PropsWithChildren<SlotProps>) {
   return (
-    <ButtonIconSlot {...rest} aria-hidden>
+    <Slot {...rest} aria-hidden>
       {children}
-    </ButtonIconSlot>
+    </Slot>
   )
 }
 

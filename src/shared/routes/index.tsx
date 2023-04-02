@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { Home, homeAction, homeLoader } from '~/pages/home'
 import { Map, mapAction, mapLoader } from '~/pages/map'
+import { PetDetails } from '~/pages/pet-details'
 
 import { routesIds } from './routes-ids'
 
@@ -22,5 +23,9 @@ export const router = createBrowserRouter([
         action: mapAction,
       },
     ],
+  },
+  {
+    path: 'pet/details/:pet_id',
+    element: <PetDetails />,
   },
 ])

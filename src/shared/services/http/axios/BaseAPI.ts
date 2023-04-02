@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
-import { API_HOST } from '../constants/api-host'
+import { API_HOST } from '../../../constants/api-host'
 
 export abstract class BaseAPI {
   private axiosInstance: AxiosInstance

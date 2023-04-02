@@ -18,13 +18,13 @@ import {
   Display,
 } from './styles'
 
-import { Aside } from './aside'
-import { PetsService } from './pets-service'
 import { petValidator } from './pet-validator'
 
 import chevron from '~/assets/icons/chevron-bottom-blue.svg'
 
 import { Card } from 'shared/components/card'
+import { PetService } from 'shared/services/http/PetService'
+import { MapAside } from './layouts/map-aside'
 import type {
   PetAge,
   PetEnergy,
@@ -57,10 +57,6 @@ export const mapAction: ActionFunction = async ({ request }) => {
   const { city, age, size, energy, independency } = fieldValues.data
   const petType = queryParams.get('type') ?? 'all'
 
-  console.log({
-    field: fieldValues.data,
-  })
-
   queryParams.set('city', city)
   queryParams.set('age', age)
   queryParams.set('energy', energy)
@@ -72,7 +68,7 @@ export const mapAction: ActionFunction = async ({ request }) => {
 }
 
 export const mapLoader: LoaderFunction = ({ request }) => {
-  const petsService = new PetsService()
+  const petsService = new PetService()
   const queryParams = getPageQueryParams(request.url)
 
   const city = queryParams.get('city') as string | undefined
@@ -116,7 +112,7 @@ export function Map() {
 
   return (
     <Container>
-      <Aside />
+      <MapAside />
 
       <Content>
         <Header>

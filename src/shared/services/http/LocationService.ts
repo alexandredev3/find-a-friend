@@ -1,4 +1,4 @@
-import { BaseAPI } from 'shared/lib/BaseAPI'
+import { BaseAPI } from './axios/BaseAPI'
 
 interface StateResponse {
   states: {

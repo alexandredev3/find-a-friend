@@ -95,7 +95,7 @@ const independencyOptions = [
   },
 ]
 
-export function Aside() {
+export function MapAside() {
   const queryParams = getPageQueryParams()
   const city = queryParams.get('city')
   const state = queryParams.get('state')

@@ -1,4 +1,4 @@
-import { BaseAPI } from 'shared/lib/BaseAPI'
+import { BaseAPI } from './axios/BaseAPI'
 
 import type {
   PetAge,
@@ -34,7 +34,7 @@ type PetsResponse = {
   }[]
 }
 
-export class PetsService extends BaseAPI {
+export class PetService extends BaseAPI {
   constructor() {
     super('/pets')
   }

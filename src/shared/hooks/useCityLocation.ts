@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { LocationService } from '../services/location-service'
+import { LocationService } from '../services/http/LocationService'
 
 import { Status } from '../constants/status'
 
